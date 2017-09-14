@@ -31,8 +31,6 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 public class HouseRepositoryTest {
 
-    private final String PATH = "/houses";
-
     @Autowired
     private WebApplicationContext context;
     @Autowired
@@ -64,7 +62,8 @@ public class HouseRepositoryTest {
         headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         headers.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("ollie:gierke").getBytes())));
 
-        mvc.perform(get(PATH).
+        final String path = "/houses";
+        mvc.perform(get(path).
             headers(headers)).
             andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).
             andExpect(status().isOk()).
@@ -73,7 +72,7 @@ public class HouseRepositoryTest {
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         final String location = mvc.
-            perform(post(PATH).
+            perform(post(path).
                 content(payload).
                 headers(headers)).
             andDo(print()).
