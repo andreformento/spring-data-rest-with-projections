@@ -1,0 +1,4 @@
+# com.fasterxml.jackson.databind.DeserializationFeature
+spring.jackson.deserialization:
+  fail-on-unknown-properties: false
+  fail-on-ignored-properties: false

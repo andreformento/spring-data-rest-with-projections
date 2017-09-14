@@ -27,8 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -39,7 +37,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class MethodLevelSecurityTests {
 
     @Autowired
