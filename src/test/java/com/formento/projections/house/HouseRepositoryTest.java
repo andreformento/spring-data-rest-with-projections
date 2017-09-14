@@ -1,6 +1,7 @@
 package com.formento.projections.house;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,18 +50,20 @@ public class HouseRepositoryTest {
 
     @Test
     public void shouldCreateAddress() throws Exception {
-        allowsPostRequestForUser("{\"address\": \"My location house\"}");
+        allowsPostRequestForUser("My location house ollie", "ollie", "gierke");
     }
 
     @Test
-    public void shouldCreateAddressAndIgnoreUserOfBody() throws Exception {
-        allowsPostRequestForUser("{\"user\": \"another\", \"address\": \"My location house\"}");
+    public void shouldShowJustSelfUserHouses() throws Exception {
+        allowsPostRequestForUser("My location house ollie", "ollie", "gierke");
+        allowsPostRequestForUser("My location house greg", "greg", "turnquist");
     }
 
-    private void allowsPostRequestForUser(final String payload) throws Exception {
+    private void allowsPostRequestForUser(final String address, final String user, final String password) throws Exception {
+        final String payload = "{\"address\": \"" + address + "\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
-        headers.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(("ollie:gierke").getBytes())));
+        headers.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode((user + ":" + password).getBytes())));
 
         final String path = "/houses";
         mvc.perform(get(path).
@@ -83,8 +86,8 @@ public class HouseRepositoryTest {
             perform(get(location).
                 headers(headers)).
             andExpect(status().isOk()).
-            andExpect(jsonPath("$.user").value(is("ollie"))).
-            andExpect(jsonPath("$.address").value(is("My location house")));
+            andExpect(jsonPath("$.user").value(is(user))).
+            andExpect(jsonPath("$.address").value(is(address)));
 
         final String locationOfUpdate = mvc.
             perform(put(location).
@@ -100,8 +103,17 @@ public class HouseRepositoryTest {
             perform(get(location).
                 headers(headers)).
             andExpect(status().isOk()).
-            andExpect(jsonPath("$.user").value(is("ollie"))).
-            andExpect(jsonPath("$.address").value(is("My location house")));
+            andExpect(jsonPath("$.user").value(is(user))).
+            andExpect(jsonPath("$.address").value(is(address)));
+
+        mvc.
+            perform(get(path).
+                headers(headers)).
+            andDo(print()).
+            andExpect(status().isOk()).
+            andExpect(jsonPath("$._embedded.houses.*").value(hasSize(1))).
+            andExpect(jsonPath("$._embedded.houses[0].user").value(is(user))).
+            andExpect(jsonPath("$._embedded.houses[0].address").value(is(address)));
     }
 
 }
