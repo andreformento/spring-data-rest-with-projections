@@ -50,7 +50,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 public class UrlLevelSecurityTests {
 
-    static final String PAYLOAD = "{\"firstName\": \"Saruman\", \"lastName\": \"the White\", " + "\"title\": \"Wizard\"}";
+    private static final String PAYLOAD = "{\"firstName\": \"Saruman\", \"lastName\": \"the White\", " + "\"title\": \"Wizard\"}";
 
     @Autowired
     private WebApplicationContext context;
@@ -59,11 +59,10 @@ public class UrlLevelSecurityTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @Before
     public void setUp() {
-
         this.mvc = webAppContextSetup(context).addFilters(filterChain).build();
 
         SecurityContextHolder.clearContext();
