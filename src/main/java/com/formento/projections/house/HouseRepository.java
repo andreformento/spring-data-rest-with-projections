@@ -1,10 +1,7 @@
 package com.formento.projections.house;
 
-import java.util.List;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.User;
 
 /**
  * This repository shows interface and method-level security. The entire repository requires ROLE_USER, while certain operations require ROLE_ADMIN.
@@ -31,7 +28,15 @@ public interface HouseRepository extends CrudRepository<House, String> {
     @PreAuthorize("hasRole('ROLE_USER')")
     void delete(String id);
 
-    @PreAuthorize("#user == principal.username")
-    List<User> findByUser(@Param("user") String user);
+//    @PreAuthorize("#user == principal.username")
+//    List<User> findByUser(@Param("user") String user);
+//
+//    @Override
+//    @Query("{ 'user' : principal.username }")
+//    Iterable<House> findAll();
+//
+//    @Override
+//    @PreAuthorize("#user == principal.username")
+//    Iterable<House> findAll(Iterable<String> strings);
 
 }
