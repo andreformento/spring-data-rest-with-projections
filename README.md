@@ -32,12 +32,12 @@ curl -i -X POST -d '{"address": "Some localization on the earth"}' -H "Content-T
 curl -i -X POST -d '{"address": "Some localization on the mars"}' -H "Content-Type: application/json" localhost:8080/houses -u greg:turnquist
 ```
 
-3. List with houses like `ollie`. The result contain just your own houses
+3. List houses from `ollie`. The result contain just your own houses
 ```
 curl localhost:8080/houses -u ollie:gierke
 ```
 
-4. Now list with houses like `greg`. The result contain just your own houses
+4. Now list houses from `greg`. The result contain just your own houses
 ```
 curl localhost:8080/houses -u greg:turnquist
 ```
