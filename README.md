@@ -1,20 +1,48 @@
 # Spring data rest with projections
 
-### References
+## References
 
 * https://docs.spring.io/spring-data/rest/docs/current/reference/html/#projections-excerpts
 * https://github.com/spring-projects/spring-data-examples/tree/master/rest/security
 
 
-## Simple API
-
-### Build and run
+## Build and run
 ```
 gradle bootRun
 ```
 
-### API
+## APIs
 
+## Magic 
+You can do a post with `ollie` user and after with `greg`. 
+When you do a request `GET /houses` without filter with each user, the response will contain just data from user. 
+See [HouseRepository.findAll()](src/main/java/com/formento/projections/house/HouseRepository.java) that have a filter `"{ user: ?#{principal.username} }"` that take juke info about the user. 
+To works, you need configure the evaluation like the class [SecurityEvaluationConfig](src/main/java/com/formento/projections/config/SecurityEvaluationConfig.java) and the dependency `compile('org.springframework.security:spring-security-data')`.
+
+### Example with a house API
+
+1. Create a house to `ollie`
+```
+curl -i -X POST -d '{"address": "Some localization on the earth"}' -H "Content-Type: application/json" localhost:8080/houses -u ollie:gierke
+```
+
+2. Create a house to `greg`
+```
+curl -i -X POST -d '{"address": "Some localization on the mars"}' -H "Content-Type: application/json" localhost:8080/houses -u greg:turnquist
+```
+
+3. List with houses like `ollie`. The result contain just your own houses
+```
+curl localhost:8080/houses -u greg:turnquist
+```
+
+4. Now list with houses like `greg`. The result contain just your own houses
+```
+curl localhost:8080/houses -u greg:turnquist
+```
+
+
+## Just a simple another API example to explain about security
 
 #### Get employees
 ```
@@ -42,16 +70,4 @@ curl -i -X POST -d '{"firstName": "Saruman", "lastName": "the evil one", "title"
 #### Get items
 ```
 curl localhost:8080/items -u greg:turnquist
-```
-
-## House API
-
-### Register
-```
-curl -i -X POST -d '{"address": "Some localization on the earth"}' -H "Content-Type: application/json" localhost:8080/houses -u ollie:gierke
-```
-
-### List
-```
-curl localhost:8080/houses -u greg:turnquist
 ```
