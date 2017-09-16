@@ -40,7 +40,7 @@ public class HouseEventHandler {
 
         final String username = userSession.getUserSession().getUsername();
         if (!username.equals(house.getUser())) {
-            // in real case, you NEVER expose data like this!!!
+            // in real case, you NEVER be expose data like this!!!
             throw new ForbiddenOperationException("You do not have permission do delete a house from your friend " + username);
         }
     }
