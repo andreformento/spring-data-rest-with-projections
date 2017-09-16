@@ -34,13 +34,19 @@ curl -i -X POST -d '{"address": "Some localization on the mars"}' -H "Content-Ty
 
 3. List with houses like `ollie`. The result contain just your own houses
 ```
-curl localhost:8080/houses -u greg:turnquist
+curl localhost:8080/houses -u ollie:gierke
 ```
 
 4. Now list with houses like `greg`. The result contain just your own houses
 ```
 curl localhost:8080/houses -u greg:turnquist
 ```
+
+5. You can delete some house from `greg`
+```
+curl -i -X DELETE -H "Content-Type: application/json" localhost:8080/houses/<some-uuid-valid-from-greg> -u greg:turnquist
+```
+The response will be http status code `204 No Content` if the uuid is from greg. Else, the status code will be `403 Forbidden` if is from another user. And, is of course, `404 Not Found` when do not exists 
 
 ## Just a simple another API example to explain about security
 
