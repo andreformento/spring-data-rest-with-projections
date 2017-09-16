@@ -24,11 +24,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest
 public class HouseRepositoryTest {
 
@@ -55,6 +58,12 @@ public class HouseRepositoryTest {
 
     @Test
     public void shouldShowJustSelfUserHouses() throws Exception {
+        allowsPostRequestForUser("My location house greg", "greg", "turnquist");
+        allowsPostRequestForUser("My location house ollie", "ollie", "gierke");
+    }
+
+    @Test
+    public void shouldShowJustSelfUserHousesFirstAdmin() throws Exception {
         allowsPostRequestForUser("My location house ollie", "ollie", "gierke");
         allowsPostRequestForUser("My location house greg", "greg", "turnquist");
     }

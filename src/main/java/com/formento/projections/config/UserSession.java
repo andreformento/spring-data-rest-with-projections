@@ -1,4 +1,4 @@
-package com.formento.projections;
+package com.formento.projections.config;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;

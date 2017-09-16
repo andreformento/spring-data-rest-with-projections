@@ -28,6 +28,7 @@ dependencies {
     compile('org.springframework.data:spring-data-rest-hal-browser')
     compile('org.springframework.boot:spring-boot-starter-hateoas')
     compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.security:spring-security-data')
     compile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
     compileOnly('org.projectlombok:lombok')
 

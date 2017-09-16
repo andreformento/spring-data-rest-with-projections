@@ -1,6 +1,6 @@
 package com.formento.projections.house;
 
-import com.formento.projections.UserSession;
+import com.formento.projections.config.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
