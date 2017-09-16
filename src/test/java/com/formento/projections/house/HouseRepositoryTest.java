@@ -3,6 +3,8 @@ package com.formento.projections.house;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,15 +83,27 @@ public class HouseRepositoryTest {
             andExpect(status().isNoContent());
     }
 
+    @Test
+    public void shouldNotDeleteHouseFromAnotherUser() throws Exception {
+        final String location = allowsPostRequestForUser("My location house ollie", "ollie", "gierke");
+
+        mvc.perform(
+            delete(location).headers(headers("greg", "turnquist"))
+        ).
+            andDo(print()).
+            andExpect(status().isForbidden()).
+            andExpect(jsonPath("$.message").value(is(not(isEmptyOrNullString()))));
+    }
+
     private String allowsPostRequestForUser(final String address, final String user, final String password) throws Exception {
         final HttpHeaders headers = headers(user, password);
         headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         final String path = "/houses";
         mvc.perform(get(path).
             headers(headers)).
+            andDo(print()).
             andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)).
-            andExpect(status().isOk()).
-            andDo(print());
+            andExpect(status().isOk());
 
         final String payload = "{\"address\": \"" + address + "\"}";
         final String location = mvc.

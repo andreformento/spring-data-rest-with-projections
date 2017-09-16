@@ -15,6 +15,7 @@ public interface HouseRepository extends CrudRepository<House, String> {
 
     <S extends House> S save(S entity);
 
+    @RestResource(exported = false)
     void delete(String id);
 
     void delete(House house);

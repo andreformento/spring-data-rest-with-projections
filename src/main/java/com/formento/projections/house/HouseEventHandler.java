@@ -3,6 +3,7 @@ package com.formento.projections.house;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.formento.projections.config.UserSession;
+import com.formento.projections.config.exception.ForbiddenOperationException;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +34,15 @@ public class HouseEventHandler {
 
     @HandleBeforeDelete
     public void handleHouseDelete(@NotNull final House house) {
+        logger.debug("validate before delete house " + house);
         checkNotNull(house.getId());
-        handleHouseDelete(house.getId());
-    }
+        checkNotNull(house.getUser());
 
-    @HandleBeforeDelete
-    public void handleHouseDelete(@NotNull final String id) {
-        // validate id
-        logger.debug("validate before delete house " + id);
+        final String username = userSession.getUserSession().getUsername();
+        if (!username.equals(house.getUser())) {
+            // in real case, you NEVER expose data like this!!!
+            throw new ForbiddenOperationException("You do not have permission do delete a house from your friend " + username);
+        }
     }
 
 }
