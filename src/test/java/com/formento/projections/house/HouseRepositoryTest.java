@@ -95,6 +95,15 @@ public class HouseRepositoryTest {
             andExpect(jsonPath("$.message").value(is(not(isEmptyOrNullString()))));
     }
 
+    @Test
+    public void shouldNotFoundIdToDelete() throws Exception {
+        mvc.perform(
+            delete("/houses/59bd465b41e8032c962d1068").headers(headers("greg", "turnquist"))
+        ).
+            andDo(print()).
+            andExpect(status().isNotFound());
+    }
+
     private String allowsPostRequestForUser(final String address, final String user, final String password) throws Exception {
         final HttpHeaders headers = headers(user, password);
         headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
