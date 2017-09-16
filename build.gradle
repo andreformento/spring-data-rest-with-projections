@@ -30,6 +30,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.security:spring-security-data')
     compile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+    compile('com.google.guava:guava:23.0')
     compileOnly('org.projectlombok:lombok')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')

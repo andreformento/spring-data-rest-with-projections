@@ -3,6 +3,7 @@ package com.formento.projections.house;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -68,12 +69,21 @@ public class HouseRepositoryTest {
         allowsPostRequestForUser("My location house greg", "greg", "turnquist");
     }
 
-    private void allowsPostRequestForUser(final String address, final String user, final String password) throws Exception {
-        final String payload = "{\"address\": \"" + address + "\"}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
-        headers.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode((user + ":" + password).getBytes())));
+    @Test
+    public void shouldCreateAndDeleteHouse() throws Exception {
+        final String user = "ollie";
+        final String password = "gierke";
+        final String location = allowsPostRequestForUser("My location house ollie", user, password);
 
+        mvc.perform(
+            delete(location).headers(headers(user, password))
+        ).
+            andExpect(status().isNoContent());
+    }
+
+    private String allowsPostRequestForUser(final String address, final String user, final String password) throws Exception {
+        final HttpHeaders headers = headers(user, password);
+        headers.set(HttpHeaders.ACCEPT, MediaTypes.HAL_JSON_VALUE);
         final String path = "/houses";
         mvc.perform(get(path).
             headers(headers)).
@@ -81,8 +91,7 @@ public class HouseRepositoryTest {
             andExpect(status().isOk()).
             andDo(print());
 
-        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-
+        final String payload = "{\"address\": \"" + address + "\"}";
         final String location = mvc.
             perform(post(path).
                 content(payload).
@@ -123,6 +132,16 @@ public class HouseRepositoryTest {
             andExpect(jsonPath("$._embedded.houses.*").value(hasSize(1))).
             andExpect(jsonPath("$._embedded.houses[0].user").value(is(user))).
             andExpect(jsonPath("$._embedded.houses[0].address").value(is(address)));
+
+        return location;
+    }
+
+    private HttpHeaders headers(final String user, final String password) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode((user + ":" + password).getBytes())));
+
+        return headers;
     }
 
 }

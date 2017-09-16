@@ -16,7 +16,7 @@ gradle bootRun
 ## Magic 
 You can do a post with `ollie` user and after with `greg`. 
 When you do a request `GET /houses` without filter with each user, the response will contain just data from user. 
-See [HouseRepository.findAll()](src/main/java/com/formento/projections/house/HouseRepository.java#L21) that have a filter `"{ user: ?#{principal.username} }"` that take just info about the user. 
+See [HouseRepository.findAll()](src/main/java/com/formento/projections/house/HouseRepository.java#L14) that have a filter `"{ user: ?#{principal.username} }"` that take just info about the user. 
 
 *How it works?* You need configure the evaluation like the class [SecurityEvaluationConfig](src/main/java/com/formento/projections/config/SecurityEvaluationConfig.java) and add the dependency `compile('org.springframework.security:spring-security-data')`.
 
@@ -41,7 +41,6 @@ curl localhost:8080/houses -u greg:turnquist
 ```
 curl localhost:8080/houses -u greg:turnquist
 ```
-
 
 ## Just a simple another API example to explain about security
 
